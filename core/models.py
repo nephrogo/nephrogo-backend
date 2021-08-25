@@ -1520,3 +1520,49 @@ class AutomaticPeritonealDialysis(models.Model):
         return AutomaticPeritonealDialysis.filter_for_user(user).filter(
             daily_health_status__date__range=(date_from, date_to)
         )
+
+
+class Doctor(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='doctor'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        default_related_name = "doctors"
+        ordering = ("-pk",)
+
+    def __str__(self):
+        return f"Doctor: {self.user}"
+
+
+class DoctorPatient(models.Model):
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name='patients'
+    )
+    patient_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        limit_choices_to={'profile__isnull': False},
+        related_name='doctors'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        default_related_name = "doctor_patients"
+        ordering = ("-pk",)
+
+        constraints = [
+            models.UniqueConstraint(fields=['doctor', 'patient_user'], name='unique_doctor_patient_user_doctor_patient')
+        ]
+
+    def __str__(self):
+        return f"Patient {self.patient_user} of Doctor {self.doctor}"

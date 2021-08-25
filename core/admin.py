@@ -214,10 +214,12 @@ class ProductAdmin(admin.ModelAdmin):
         return obj.liquids_ml
 
     def most_similar(self, obj):
-        return mark_safe('<br><br>'.join(map(lambda x: f'<a href="/admin/core/product/{x.pk}/change/" target="_blank">{x.name_en} ({x.name})</a>', models.Product.objects.annotate(
-            similarity=TrigramSimilarity('name_en', obj.name_en)).exclude(
-            region=obj.region).order_by('-similarity')[:3]))
-                         )
+        return mark_safe('<br><br>'.join(
+            map(lambda x: f'<a href="/admin/core/product/{x.pk}/change/" target="_blank">{x.name_en} ({x.name})</a>',
+                models.Product.objects.annotate(
+                    similarity=TrigramSimilarity('name_en', obj.name_en)).exclude(
+                    region=obj.region).order_by('-similarity')[:3]))
+        )
 
 
 class BaseUserProfileAdminMixin(NumericFilterModelAdmin):
@@ -667,3 +669,51 @@ class AutomaticPeritonealDialysisAdmin(admin.ModelAdmin):
         return obj.daily_health_status.date
 
     urine_ml.admin_order_field = "daily_health_status__date"
+
+
+@admin.register(models.Doctor)
+class DoctorAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+
+        'created_at',
+        'updated_at',
+    )
+    raw_id_fields = ('user',)
+    date_hierarchy = 'created_at'
+    search_fields = (
+        'user__pk',
+        'user__email',
+        'user__username',
+    )
+    list_filter = (
+        'created_at',
+    )
+    list_select_related = ('user',)
+    actions = [csvexport]
+
+
+@admin.register(models.DoctorPatient)
+class DoctorPatientAdmin(admin.ModelAdmin):
+    list_display = (
+        'doctor',
+        'patient_user',
+
+        'created_at',
+        'updated_at',
+    )
+    raw_id_fields = ('doctor', 'patient_user',)
+    date_hierarchy = 'created_at'
+    search_fields = (
+        'doctor__user__pk',
+        'doctor__user__email',
+        'doctor__user__username',
+        'doctor__patient_user__pk',
+        'doctor__patient_user__email',
+        'doctor__patient_user__username',
+    )
+    list_filter = (
+        'created_at',
+    )
+    list_select_related = ('doctor', 'doctor__user', 'patient_user',)
+    actions = [csvexport]
