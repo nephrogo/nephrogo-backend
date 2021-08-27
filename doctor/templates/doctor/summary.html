@@ -122,15 +122,15 @@
                             borderColor: '#444e86',
                         },
                     {% endif %}
-                    {% if nutrition_reports.last.daily_norm_liquids_g %}
+                    {% if nutrition_reports.last.daily_norm_liquids_ml %}
                         {
                             label: '{% trans 'Skysčiai' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {% if report.daily_norm_liquids_g %}
+                                    {% if report.daily_norm_liquids_ml %}
                                         {
                                             x: '{{ report.date.isoformat }}',
-                                            y: {{report.total_liquids_g|div:report.daily_norm_liquids_g|mul:100|floatformat:"0"}},
+                                            y: {{report.total_liquids_ml|div:report.daily_norm_liquids_ml|mul:100|floatformat:"0"}},
                                         },
                                     {% endif %}
                                 {% endfor %}
