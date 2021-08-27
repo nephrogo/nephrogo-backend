@@ -4,93 +4,21 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block title %}{% trans 'Mityba' %}{% endblock %}
+{% block title %}{% trans 'Suvestinė' %}{% endblock %}
 
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-12">
             <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Kalio suvartojimas' %}</strong></h4>
+                <h4 class="card-title"><strong>{% trans 'Medžiagų paros normų sunaudojimas ' %}</strong></h4>
 
                 <div class="card-body">
-                    <canvas id="potassium-usage-chart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Baltymų suvartojimas' %}</strong></h4>
-
-                <div class="card-body">
-                    <canvas id="proteins-usage-chart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Natrio suvartojimas' %}</strong></h4>
-
-                <div class="card-body">
-                    <canvas id="sodium-usage-chart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Fosforo suvartojimas' %}</strong></h4>
-
-                <div class="card-body">
-                    <canvas id="phosphorus-usage-chart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Energijos suvartojimas' %}</strong></h4>
-
-                <div class="card-body">
-                    <canvas id="energy-usage-chart"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <h4 class="card-title"><strong>{% trans 'Skysčių suvartojimas' %}</strong></h4>
-
-                <div class="card-body">
-                    <canvas id="liquids-usage-chart"></canvas>
+                    <canvas style="max-height: 300px;" id="nutrient-usage-chart"></canvas>
                 </div>
             </div>
         </div>
     </div>
-
-
-    {% if reports.exists %}
-        {% for report in reports %}
-            {% include 'doctor/cell/daily-nutrition-report-card.html' with report=report %}
-        {% endfor %}
-
-        <footer class="flexbox align-items-center mb-4">
-            {% include 'doctor/widget/pagination.html' with paginator_page=page_obj %}
-        </footer>
-    {% else %}
-        <div class="row">
-            <div class="col-12 text-center">
-                <div class="card">
-                    <div class="card-body">
-                        <div>
-                            <i class="fas fa-paw fs-90"></i>
-                        </div>
-                        {% trans 'Rezultatų nerasta.' %}.
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
 {% endblock %}
 
 {% block script %}
@@ -100,292 +28,138 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
             integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/1.0.2/chartjs-plugin-annotation.min.js"
-            integrity="sha512-FuXN8O36qmtA+vRJyRoAxPcThh/1KJJp7WSRnjCpqA+13HYGrSWiyzrCHalCWi42L5qH1jt88lX5wy5JyFxhfQ=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     <script>
-        const potassiumChart = new Chart(document.getElementById('potassium-usage-chart').getContext('2d'), {
+        const nutrientUsageChart = new Chart(document.getElementById('nutrient-usage-chart').getContext('2d'), {
             type: 'line',
             data: {
                 datasets: [
-                    {
-                        label: '{% trans 'Kalio suvartojimas' %}',
-                        backgroundColor: "#36a2eb",
-                        borderColor: "#36a2eb",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_potassium_mg|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
+                    {% if nutrition_reports.last.daily_norm_potassium_mg %}
+                        {
+                            label: '{% trans 'Kalis' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_potassium_mg|div:report.daily_norm_potassium_mg|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#ffa600',
+                            borderColor: '#ffa600',
+                        },
+                    {% endif %}
+                    {% if nutrition_reports.last.daily_norm_proteins_mg %}
+                        {
+                            label: '{% trans 'Baltymai' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_proteins_mg|div:report.daily_norm_proteins_mg|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#ff6e54',
+                            borderColor: '#ff6e54',
+                        },
+                    {% endif %}
+
+                    {% if nutrition_reports.last.daily_norm_proteins_mg %}
+                        {
+                            label: '{% trans 'Natris' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_sodium_mg|div:report.daily_norm_sodium_mg|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#dd5182',
+                            borderColor: '#dd5182',
+                        },
+                    {% endif %}
+
+                    {% if nutrition_reports.last.daily_norm_phosphorus_mg %}
+                        {
+                            label: '{% trans 'Fosforas' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_sodium_mg|div:report.daily_norm_phosphorus_mg|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#955196',
+                            borderColor: '#955196',
+                        },
+                    {% endif %}
+                    {% if nutrition_reports.last.daily_norm_energy_kcal %}
+                        {
+                            label: '{% trans 'Energija' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_sodium_mg|div:report.daily_norm_energy_kcal|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#444e86',
+                            borderColor: '#444e86',
+                        },
+                    {% endif %}
+                    {% if nutrition_reports.last.daily_norm_liquids_g %}
+                        {
+                            label: '{% trans 'Skysčiai' %}',
+                            data: [
+                                {% for report in nutrition_reports %}
+                                    {
+                                        x: '{{ report.date.isoformat }}',
+                                        y: {{report.total_sodium_mg|div:report.daily_norm_liquids_g|mul:100|floatformat:"0"}},
+                                    },
+                                {% endfor %}
+                            ],
+                            backgroundColor: '#444e86',
+                            borderColor: '#444e86',
+                        },
+                    {% endif %}
                 ]
             },
             options: {
-                responsive: true,
+                interaction: {
+                    mode: 'x'
+                },
                 scales: {
                     xAxes: [{
-                        type: 'timeseries'
+                        type: 'timeseries',
                     }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '{% trans 'Paros normos dalis, %' %}'
                         },
-                    }],
+                        beginAtZero: true,
+                    }
                 },
                 plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.dataset.label + ": " + context.parsed.y + " %";
                             }
                         }
+                    },
+                    legend: {
+                        position: 'bottom',
                     }
-                }
-            }
-        });
-        const proteinsChart = new Chart(document.getElementById('proteins-usage-chart').getContext('2d'), {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Baltymų suvartojimas' %}',
-                        backgroundColor: "#9966ff",
-                        borderColor: "#9966ff",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_proteins_mg|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        type: 'timeseries'
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    }],
                 },
-                plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        const sodiumChart = new Chart(document.getElementById('sodium-usage-chart').getContext('2d'), {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Natrio suvartojimas' %}',
-                        backgroundColor: "#4bc0c0",
-                        borderColor: "#4bc0c0",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_sodium_mg|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        type: 'timeseries'
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    }],
-                },
-                plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        const phosphorusChart = new Chart(document.getElementById('phosphorus-usage-chart').getContext('2d'), {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Fosforo suvartojimas' %}',
-                        backgroundColor: "#ff9f40",
-                        borderColor: "#ff9f40",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_phosphorus_mg|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        type: 'timeseries'
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    }],
-                },
-                plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        const energyChart = new Chart(document.getElementById('energy-usage-chart').getContext('2d'), {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Energijos suvartojimas' %}',
-                        backgroundColor: "#ff9f40",
-                        borderColor: "#ff9f40",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_energy_kcal|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        type: 'timeseries'
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    }],
-                },
-                plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        const liquidsChart = new Chart(document.getElementById('liquids-usage-chart').getContext('2d'), {
-            type: 'line',
-            data: {
-                datasets: [
-                    {
-                        label: '{% trans 'Skysčių suvartojimas' %}',
-                        backgroundColor: "#ff9f40",
-                        borderColor: "#ff9f40",
-                        data: [
-                            {% for report in nutrition_reports %}
-                                {
-                                    x: '{{ report.date.isoformat }}',
-                                    y: {{report.total_liquids_ml|div:"3"|unlocalize}},
-                                },
-                            {% endfor %}
-                        ]
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        type: 'timeseries'
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                    }],
-                },
-                plugins: {
-                    autocolors: false,
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 160,
-                                yMax: 160,
-                                borderColor: 'rgb(255, 99, 132)',
-                                borderWidth: 2,
-                            }
-                        }
-                    }
-                }
+
+
             }
         });
     </script>
