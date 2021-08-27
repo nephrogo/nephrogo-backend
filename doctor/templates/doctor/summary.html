@@ -32,7 +32,7 @@
 
     <script>
         const nutrientUsageChart = new Chart(document.getElementById('nutrient-usage-chart').getContext('2d'), {
-            type: 'scatter',
+            type: 'line',
             data: {
                 datasets: [
                     {% if nutrition_reports.last.daily_norm_potassium_mg %}
@@ -50,6 +50,7 @@
                             ],
                             backgroundColor: '#ffa600',
                             borderColor: '#ffa600',
+                            showLine: false,
                         },
                     {% endif %}
                     {% if nutrition_reports.last.daily_norm_proteins_mg %}
@@ -67,6 +68,7 @@
                             ],
                             backgroundColor: '#ff6e54',
                             borderColor: '#ff6e54',
+                            showLine: false,
                         },
                     {% endif %}
 
@@ -85,6 +87,7 @@
                             ],
                             backgroundColor: '#dd5182',
                             borderColor: '#dd5182',
+                            showLine: false,
                         },
                     {% endif %}
 
@@ -103,6 +106,7 @@
                             ],
                             backgroundColor: '#955196',
                             borderColor: '#955196',
+                            showLine: false,
                         },
                     {% endif %}
                     {% if nutrition_reports.last.daily_norm_energy_kcal %}
@@ -120,6 +124,7 @@
                             ],
                             backgroundColor: '#444e86',
                             borderColor: '#444e86',
+                            showLine: false,
                         },
                     {% endif %}
                     {% if nutrition_reports.last.daily_norm_liquids_ml %}
@@ -137,6 +142,7 @@
                             ],
                             backgroundColor: '#444e86',
                             borderColor: '#444e86',
+                            showLine: false,
                         },
                     {% endif %}
                 ]
