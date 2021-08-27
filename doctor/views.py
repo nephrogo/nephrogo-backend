@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.http.request import HttpRequest
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 
 from core import models
 from doctor.mixins import UserIsDoctorMixin
@@ -15,6 +15,28 @@ class IndexView(UserIsDoctorMixin):
     # noinspection PyMethodMayBeStatic
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         return render(request, 'doctor/no-associated-shelter.html')
+
+
+class SummaryView(UserIsDoctorMixin, TemplateView):
+    template_name = 'doctor/summary.html'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        context['active_menu_item'] = 'summary'
+
+        # noinspection PyUnresolvedReferences
+        doctor = models.Doctor.get_doctor_by_user(self.request.user)
+        patient = doctor.get_patient()
+
+        reports = models.DailyIntakesReport.filter_for_user(
+            patient.patient_user).annotate_with_nutrient_totals(). \
+            exclude_empty_intakes(). \
+            order_by('-date')
+
+        context['nutrition_reports'] = reports
+
+        return context
 
 
 class NutritionView(UserIsDoctorMixin, ListView):
