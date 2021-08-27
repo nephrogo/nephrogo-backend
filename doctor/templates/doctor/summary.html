@@ -40,10 +40,12 @@
                             label: '{% trans 'Kalis' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_potassium_mg|div:report.daily_norm_potassium_mg|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if report.daily_norm_potassium_mg %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_potassium_mg|div:report.daily_norm_potassium_mg|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#ffa600',
@@ -55,10 +57,12 @@
                             label: '{% trans 'Baltymai' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_proteins_mg|div:report.daily_norm_proteins_mg|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if report.daily_norm_proteins_mg %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_proteins_mg|div:report.daily_norm_proteins_mg|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#ff6e54',
@@ -71,10 +75,12 @@
                             label: '{% trans 'Natris' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_sodium_mg|div:report.daily_norm_sodium_mg|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if report.daily_norm_sodium_mg %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_sodium_mg|div:report.daily_norm_sodium_mg|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#dd5182',
@@ -87,10 +93,12 @@
                             label: '{% trans 'Fosforas' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_sodium_mg|div:report.daily_norm_phosphorus_mg|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if daily_norm_phosphorus_mg %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_sodium_mg|div:report.daily_norm_phosphorus_mg|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#955196',
@@ -102,10 +110,12 @@
                             label: '{% trans 'Energija' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_sodium_mg|div:report.daily_norm_energy_kcal|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if report.daily_norm_energy_kcal %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_sodium_mg|div:report.daily_norm_energy_kcal|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#444e86',
@@ -117,10 +127,12 @@
                             label: '{% trans 'Skysčiai' %}',
                             data: [
                                 {% for report in nutrition_reports %}
-                                    {
-                                        x: '{{ report.date.isoformat }}',
-                                        y: {{report.total_sodium_mg|div:report.daily_norm_liquids_g|mul:100|floatformat:"0"}},
-                                    },
+                                    {% if report.daily_norm_liquids_g %}
+                                        {
+                                            x: '{{ report.date.isoformat }}',
+                                            y: {{report.total_sodium_mg|div:report.daily_norm_liquids_g|mul:100|floatformat:"0"}},
+                                        },
+                                    {% endif %}
                                 {% endfor %}
                             ],
                             backgroundColor: '#444e86',
