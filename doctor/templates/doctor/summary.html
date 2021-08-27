@@ -32,7 +32,7 @@
 
     <script>
         const nutrientUsageChart = new Chart(document.getElementById('nutrient-usage-chart').getContext('2d'), {
-            type: 'line',
+            type: 'scatter',
             data: {
                 datasets: [
                     {% if nutrition_reports.last.daily_norm_potassium_mg %}
