@@ -32,7 +32,7 @@ class SummaryView(UserIsDoctorMixin, TemplateView):
         reports = models.DailyIntakesReport.filter_for_user(
             patient.patient_user).annotate_with_nutrient_totals(). \
             exclude_empty_intakes(). \
-            order_by('date')
+            order_by('-date')
 
         context['nutrition_reports'] = reports
 
