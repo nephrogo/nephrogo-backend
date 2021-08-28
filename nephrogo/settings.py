@@ -58,8 +58,6 @@ INSTALLED_APPS = [
     'doctor.apps.DoctorConfig',
     'utils',
 
-    'django_hosts',
-
     'rest_framework',
     'django_filters',
     'drf_spectacular',
@@ -87,7 +85,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,7 +93,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'doctor.middleware.AssociateDoctorPatients',
-    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 if DEBUG:
@@ -116,9 +112,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'doctor.context_processors.doctor_patients',
-            ],
-            'builtins': [
-                'django_hosts.templatetags.hosts_override'
             ],
         },
     },
@@ -447,9 +440,6 @@ SOCIALACCOUNT_ADAPTER = 'doctor.adapters.SocialAccountAdapter'
 
 EMAIL_FROM = 'info@nephrogo.com'
 CONTACT_PHONE = '+37065253669'
-
-ROOT_HOSTCONF = 'nephrogo.hosts'
-DEFAULT_HOST = 'api'
 
 if not DEBUG:
     patch_all()
