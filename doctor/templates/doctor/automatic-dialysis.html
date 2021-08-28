@@ -1,0 +1,91 @@
+{% extends 'doctor/base/base-page.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{% trans 'Automatinės peritoninės dializės' %}{% endblock %}
+
+
+{% block content %}
+    {% if dialyses.exists %}
+        <div class="card">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>{% trans 'Tirpalų įpilimo data' %}</th>
+                    <th>{% trans 'Balansas' %}, ml</th>
+                    <th>{% trans 'Geltonas tirpalas' %}, ml</th>
+                    <th>{% trans 'Žalias tirpalas' %}, ml</th>
+                    <th>{% trans 'Oranžinis tirpalas' %}, ml</th>
+                    <th>{% trans 'Mėlynas tirpalas' %}, ml</th>
+                    <th>{% trans 'Violetinis tirpalas' %}, ml</th>
+                    <th>{% trans 'Pradinis drenavimas' %} <small>(Initial draining)</small>, ml</th>
+                    <th>{% trans 'Visas drenavimas' %} <small>(Total drain volume)</small>, ml</th>
+                    <th>{% trans 'Paskutinis pylimas' %} <small>(Last fill)</small>, ml</th>
+                    <th>{% trans 'Paros ultrafiltracija' %} <small>(Total UF)</small>, ml</th>
+                    <th>{% trans 'Pastabos' %}</th>
+                    <th>{% trans 'Dializato išpylimo data' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for dialysis in dialyses %}
+                    <tr>
+                        <td>{{ dialysis.started_at|date:"N d" }}</td>
+                        <td>{{ dialysis.balance|intcomma }}</td>
+                        <td>
+                            {% if dialysis.solution_yellow_in_ml != 0 %}
+                                {{ dialysis.solution_yellow_in_ml|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dialysis.solution_green_in_ml != 0 %}
+                                {{ dialysis.solution_green_in_ml|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dialysis.solution_orange_in_ml != 0 %}
+                                {{ dialysis.solution_orange_in_ml|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dialysis.solution_blue_in_ml != 0 %}
+                                {{ dialysis.solution_blue_in_ml|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if dialysis.solution_purple_in_ml != 0 %}
+                                {{ dialysis.solution_purple_in_ml|intcomma }}
+                            {% endif %}
+                        </td>
+                        <td>{{ dialysis.initial_draining_ml|default_if_none:"-"|intcomma }}</td>
+                        <td>{{ dialysis.total_drain_volume_ml|default_if_none:"-"|intcomma }}</td>
+                        <td>{{ dialysis.last_fill_ml|default_if_none:"-"|intcomma }}</td>
+                        <td>{{ dialysis.total_ultrafiltration_ml|default_if_none:"-"|intcomma }}</td>
+                        <td>{{ dialysis.notes }}</td>
+                        <td>{{ dialysis.finished_at }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <footer class="flexbox align-items-center mb-4">
+            {% include 'doctor/widget/pagination.html' with paginator_page=page_obj %}
+        </footer>
+    {% else %}
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <i class="fas fa-paw fs-90"></i>
+                        </div>
+                        {% trans 'Rezultatų nerasta.' %}.
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

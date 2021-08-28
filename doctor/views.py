@@ -90,6 +90,30 @@ class HealthStatusView(UserIsDoctorMixin, ListView):
         return context
 
 
+class AutomaticDialysisView(UserIsDoctorMixin, ListView):
+    template_name = 'doctor/automatic-dialysis.html'
+    context_object_name = 'dialyses'
+    model = models.AutomaticPeritonealDialysis
+    paginate_by = 30
+
+    def get_queryset(self):
+        # noinspection PyUnresolvedReferences
+        doctor = models.Doctor.get_doctor_by_user(self.request.user)
+        patient = doctor.get_patient()
+
+        statuses = models.AutomaticPeritonealDialysis.filter_for_user(patient.patient_user) \
+            .prefetch_all_related() \
+            .order_by('-started_at')
+
+        return statuses
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['active_menu_item'] = 'automatic_dialysis'
+
+        return context
+
+
 @login_required(redirect_field_name=None)
 def no_associated_shelter(request: HttpRequest) -> HttpResponse:
     return render(request, 'doctor/no-associated-shelter.html')

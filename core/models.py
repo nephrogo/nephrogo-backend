@@ -1518,6 +1518,16 @@ class AutomaticPeritonealDialysis(models.Model):
     def filter_for_user(user: AbstractBaseUser) -> QuerySet[AutomaticPeritonealDialysis]:
         return AutomaticPeritonealDialysis.objects.filter(daily_health_status__user=user)
 
+    @property
+    def balance(self) -> int:
+        if self.total_ultrafiltration_ml:
+            return 0
+
+        total_liquids_ml = self.daily_intakes_report.daily_norm_liquids_g or 0
+        total_urine_ml = self.daily_health_status.urine_ml or 0
+
+        return total_liquids_ml - self.total_ultrafiltration_ml - total_urine_ml
+
     @staticmethod
     def filter_for_user_between_dates(
             user: AbstractBaseUser,
