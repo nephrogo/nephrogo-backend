@@ -8,15 +8,15 @@
 {% block content %}
     {% if statuses.exists %}
         <div class="card">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover table-bordered">
                 <thead>
                 <tr>
                     <th>{% trans 'Data' %}</th>
                     <th>{% trans 'Kruajo spaudimas' %}</th>
-                    <th>{% trans 'Pulsas' %}</th>
-                    <th>{% trans 'Kūno svoris' %}</th>
-                    <th>{% trans 'Šlapimo kiekis' %}</th>
-                    <th>{% trans 'Gliukozės koncentracija kraujyje' %}</th>
+                    <th>{% trans 'Pulsas' %}, k.min</th>
+                    <th>{% trans 'Kūno svoris' %}, kg</th>
+                    <th>{% trans 'Šlapimo kiekis' %}, ml</th>
+                    <th>{% trans 'Gliukozės koncentracija kraujyje' %}, mmol/l</th>
                 </tr>
                 </thead>
                 <tbody>
