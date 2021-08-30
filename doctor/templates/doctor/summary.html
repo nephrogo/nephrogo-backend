@@ -78,25 +78,25 @@
                     {% if nutrition_reports.first.daily_norm_potassium_mg %}
                         <tr>
                             <td><strong>{% trans 'Kalis' %}</strong></td>
-                            <td>{{ nutrition_reports.first.daily_norm_potassium_mg|div:"3"|floatformat }} g</td>
+                            <td>{{ nutrition_reports.first.daily_norm_potassium_mg|div:"3"|floatformat|intcomma }} g</td>
                         </tr>
                     {% endif %}
                     {% if nutrition_reports.first.daily_norm_proteins_mg %}
                         <tr>
                             <td><strong>{% trans 'Baltymai' %}</strong></td>
-                            <td>{{ nutrition_reports.first.daily_norm_proteins_mg|div:"3"|floatformat }} g</td>
+                            <td>{{ nutrition_reports.first.daily_norm_proteins_mg|div:"3"|floatformat|intcomma }} g</td>
                         </tr>
                     {% endif %}
                     {% if nutrition_reports.first.daily_norm_sodium_mg %}
                         <tr>
                             <td><strong>{% trans 'Natris' %}</strong></td>
-                            <td>{{ nutrition_reports.first.daily_norm_sodium_mg|div:"3"|floatformat }} g</td>
+                            <td>{{ nutrition_reports.first.daily_norm_sodium_mg|div:"3"|floatformat|intcomma }} g</td>
                         </tr>
                     {% endif %}
                     {% if nutrition_reports.first.daily_norm_phosphorus_mg %}
                         <tr>
                             <td><strong>{% trans 'Fosforas' %}</strong></td>
-                            <td>{{ nutrition_reports.first.daily_norm_phosphorus_mg|div:"3"|floatformat }} g</td>
+                            <td>{{ nutrition_reports.first.daily_norm_phosphorus_mg|div:"3"|floatformat|intcomma }} g</td>
                         </tr>
                     {% endif %}
                     {% if nutrition_reports.first.daily_norm_liquids_ml %}
