@@ -21,7 +21,8 @@ from sentry_sdk.integrations.redis import RedisIntegration
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, False),
+    GIT_COMMIT=(str, 'DEBUG'),
 )
 
 # Quick-start development settings - unsuitable for production
@@ -31,6 +32,8 @@ env = environ.Env(
 DEBUG = env('DEBUG')
 if DEBUG:
     CELERY_TASK_ALWAYS_EAGER = True  # Sync celery tasks in sync
+
+GIT_COMMIT = env('GIT_COMMIT')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY') if not DEBUG else 'DEBUG'
@@ -258,7 +261,7 @@ if not DEBUG:
     sentry_sdk.init(
         dsn=env.str('SENTRY_DSN'),
         integrations=[sentry_logging, DjangoIntegration(), CeleryIntegration(), RedisIntegration()],
-        release=env.str('GIT_COMMIT'),
+        release=GIT_COMMIT,
         traces_sample_rate=1.0,
         send_default_pii=True,
         request_bodies='always',
@@ -295,7 +298,7 @@ if not DEBUG:
         'accept-encoding',
     ])
 
-    tracer.set_tags({'env': 'production', 'version': env.str('GIT_COMMIT')})
+    tracer.set_tags({'env': 'production', 'version': GIT_COMMIT})
 
 REDIS_URL = env.str('REDIS_URL', None)
 
