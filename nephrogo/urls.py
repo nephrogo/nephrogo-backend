@@ -28,5 +28,5 @@ urlpatterns = [
                   path('health/', include('health_check.urls')),
                   path('ckeditor/', include('ckeditor_uploader.urls')),
                   path('accounts/', include('allauth.urls')),
-                  path('', RedirectView.as_view(pattern_name='swagger-ui'))
+                  path('', RedirectView.as_view(pattern_name='doctor:index'))
               ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
