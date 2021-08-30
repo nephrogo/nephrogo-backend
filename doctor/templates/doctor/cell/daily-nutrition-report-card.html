@@ -49,7 +49,7 @@
                 </strong>
                 {% with norm_percentage=report.total_potassium_mg|div:report.daily_norm_potassium_mg|mul:100 %}
                     {% if norm_percentage %}
-                        <small>({{ norm_percentage|floatformat:"0" }} %)</small>
+                        <small>({{ norm_percentage|floatformat:"0" }}%)</small>
                     {% endif %}
                 {% endwith %}
             </td>
@@ -59,7 +59,7 @@
                 </strong>
                 {% with norm_percentage=report.total_proteins_mg|div:report.daily_norm_proteins_mg|mul:100 %}
                     {% if norm_percentage %}
-                        <small>({{ norm_percentage|floatformat:"0" }} %)</small>
+                        <small>({{ norm_percentage|floatformat:"0" }}%)</small>
                     {% endif %}
                 {% endwith %}
             </td>
@@ -69,7 +69,7 @@
                 </strong>
                 {% with norm_percentage=report.total_sodium_mg|div:report.daily_norm_sodium_mg|mul:100 %}
                     {% if norm_percentage %}
-                        <small>({{ norm_percentage|floatformat:"0" }} %)</small>
+                        <small>({{ norm_percentage|floatformat:"0" }}%)</small>
                     {% endif %}
                 {% endwith %}
             </td>
@@ -79,7 +79,7 @@
                 </strong>
                 {% with norm_percentage=report.total_phosphorus_mg|div:report.daily_norm_phosphorus_mg|mul:100 %}
                     {% if norm_percentage %}
-                        <small>({{ norm_percentage|floatformat:"0" }} %)</small>
+                        <small>({{ norm_percentage|floatformat:"0" }}%)</small>
                     {% endif %}
                 {% endwith %}
             </td>
@@ -94,7 +94,7 @@
                 </strong>
                 {% with norm_percentage=report.total_liquids_ml|div:report.daily_norm_liquids_g|mul:100 %}
                     {% if norm_percentage %}
-                        <small>({{ norm_percentage|floatformat:"0" }} %)</small>
+                        <small>({{ norm_percentage|floatformat:"0" }}%)</small>
                     {% endif %}
                 {% endwith %}
             </td>

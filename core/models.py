@@ -1520,7 +1520,7 @@ class AutomaticPeritonealDialysis(models.Model):
 
     @property
     def balance(self) -> int:
-        if self.total_ultrafiltration_ml:
+        if not self.total_ultrafiltration_ml:
             return 0
 
         total_liquids_ml = self.daily_intakes_report.daily_norm_liquids_g or 0
